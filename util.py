@@ -3,6 +3,31 @@
 import os
 import random
 import traceback
+import base64
+import gzip
+
+
+def gzip_compress_string(raw_string, encoding='utf-8'):
+    assert type(raw_string) is str
+    if len(raw_string) < 0:
+        return ''
+
+    encode_data = raw_string.encode(encoding)
+    zipped_data = gzip.compress(encode_data)
+    b64_data = base64.b64encode(zipped_data)
+    return b64_data.decode(encoding)
+
+
+def gzip_decompress_string(zipped_string, encoding='utf-8'):
+    assert type(zipped_string) is str
+    if len(zipped_string) <= 0:
+        return ''
+
+    encode_data = zipped_string.encode(encoding)
+    b64_data = base64.b64decode(encode_data)
+    unzipped_data = gzip.decompress(b64_data)
+    clear_string = unzipped_data.decode(encoding)
+    return clear_string
 
 
 def calc_percentage(denominator, molecular):
@@ -42,11 +67,11 @@ def copy_file(source_file_path, target_file_dir, target_file_name):
                         break
         return target_file_path
     except:
-        print traceback.format_exc()
+        print(traceback.format_exc())
     return ''
 
 
-def execute_abs_path():
+def execute_full_path():
     return os.path.dirname(os.path.abspath(__file__))
 
 
@@ -105,6 +130,13 @@ def gen_rand_str_from_a0_to_z9(length):
     return __gen_rnd_str(enums, length)
 
 
+def gen_rand_str_from_0_to_9(length):
+    enums = [
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    ]
+    return __gen_rnd_str(enums, length)
+
+
 def __gen_rnd_str(enums, length):
     assert type(enums) is list
     assert type(length) is int
@@ -126,4 +158,3 @@ def __gen_rnd_str(enums, length):
     del chars
     return rnd_string
     pass
-
