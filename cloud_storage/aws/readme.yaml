@@ -1,0 +1,28 @@
+%YAML 1.1
+---
+# This agent powered by boto3, it's really nice and easy to use :)
+
+- Install awscli: [
+  $python -m pip install awscli
+
+  # For test install success or not, try this cmd: $aws help
+]
+
+- Configure AWS acesskey and secret: [
+    $aws configure
+
+    aws_access_key_id = YOUR_ACCESS_KEY
+    aws_secret_access_key = YOUR_SECRET_KEY
+
+    # The access key and secret at AWS IAM user, you should create a IAM user first
+  ]
+
+- Install boto3: [
+  $python -m pip install boto3
+
+  # If you are at OSX env, you need to add install flag: '--ignore-installed six'
+]
+
+- Happy to use: [
+  # Congratulations! You can import this module, call every function you want. Go ahead!
+]
