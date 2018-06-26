@@ -1,15 +1,19 @@
 # coding: utf-8
 
+"""
+This script needs to work with the python3 module: http.server
+"""
+
 import traceback
 import os
 
 
-def that_local_file_service_url():
+def local_file_service_url():
     return "http://192.168.1.110:9487"
 
 
-def that_local_file_service_execute_abs_path():
-    return os.path.join(os.path.expanduser("~"), 'Services', 'pure-file-service')
+def local_file_service_root_path():
+    return os.path.join(os.path.expanduser("~"), 'services', 'pure-file-service')
 
 
 def copy_file(source_file_path, destn_file_name, destn_dir):
@@ -27,10 +31,15 @@ def copy_file(source_file_path, destn_file_name, destn_dir):
         Url, the file can be download via this url. Null or empty means copy failed.
     """
 
+    destn_file_name = str(destn_file_name)
+    destn_file_name = destn_file_name.replace(':', '')
+    destn_file_name = destn_file_name.replace('/', '')
+    destn_file_name = destn_file_name.replace(' ', '')
+
     file_url = ''
     try:
-        with open(source_file_path, 'r') as source_ptr:
-            destn_full_dir = os.path.join(that_local_file_service_execute_abs_path(), destn_dir)
+        with open(source_file_path, 'r') as source_fs:
+            destn_full_dir = os.path.join(local_file_service_root_path(), destn_dir)
 
             if not os.path.exists(destn_full_dir):
                 os.makedirs(destn_full_dir)
@@ -39,7 +48,7 @@ def copy_file(source_file_path, destn_file_name, destn_dir):
             dest_file_path = os.path.join(destn_full_dir, destn_file_name)
             print('dest_file_path ', dest_file_path)
 
-            with open(dest_file_path, 'wb') as destn_ptr:
+            with open(dest_file_path, 'wb') as destn_fs:
 
                 source_size = int(os.path.getsize(source_file_path))
 
@@ -48,15 +57,15 @@ def copy_file(source_file_path, destn_file_name, destn_dir):
                 destn_file_size = 0
 
                 while True:
-                    buff = source_ptr.read(buff_size)
-                    destn_file_size += len(buff)
-                    if not buff:
+                    fs_buff = source_fs.read(buff_size)
+                    destn_file_size += len(fs_buff)
+                    if not fs_buff:
                         break
-                    destn_ptr.write(buff)
+                    destn_fs.write(fs_buff)
                     pass  # while True
                 pass  # with open(dest_file_path ...
             pass  # with open(source_file_path ...
-        file_url = that_local_file_service_url() + '/' + destn_dir + '/' + destn_file_name
+        file_url = local_file_service_url() + '/' + destn_dir + '/' + destn_file_name
         pass
     except:
         file_url = ''
@@ -68,7 +77,7 @@ def copy_file(source_file_path, destn_file_name, destn_dir):
 def del_file(url):
     result = ''
     try:
-        path = url.replace(that_local_file_service_url(), that_local_file_service_execute_abs_path())
+        path = url.replace(local_file_service_url(), local_file_service_root_path())
 
         print('del path: ', path)
 
@@ -83,3 +92,16 @@ def del_file(url):
         result = 'exception occur'
         pass
     return result
+
+
+if __name__ == "__main__":
+    from http.server import SimpleHTTPRequestHandler, HTTPServer
+
+    # os.chdir('/home/user1/services/local_file_service/')
+    PORT = 9487
+    HOST = '0.0.0.0'
+    server_address = (HOST, PORT)
+    httpd = HTTPServer(server_address, SimpleHTTPRequestHandler)
+    print("Serving HTTP on {} port {} ...".format(server_address[0], server_address[1]))
+    httpd.serve_forever()
+    pass
