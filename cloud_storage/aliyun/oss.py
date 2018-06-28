@@ -35,8 +35,8 @@ class OssAgent(object):
         bucket = oss2.Bucket(auth, self.endpoint, self.bucket_name)
 
         key = str(key)
-        key.replace(':', '')
-        key.replace(' ', '')
+        key = key.replace(':', '')
+        key = key.replace(' ', '')
 
         assert type(str_content) is str
         result = bucket.put_object(key, str_content, progress_callback=progress_callback)
@@ -78,8 +78,8 @@ class OssAgent(object):
         bucket = oss2.Bucket(auth, self.endpoint, self.bucket_name)
 
         key = str(key)
-        key.replace(':', '')
-        key.replace(' ', '')
+        key = key.replace(':', '')
+        key = key.replace(' ', '')
 
         import _io
         assert type(file_stream) is _io.BufferedReader
