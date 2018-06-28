@@ -16,7 +16,11 @@ class OssAgent(object):
     Demo code:
 
     oss_agent = OssAgent()
-    oss_agent.upload_string_file('story_{}.txt'.format(time.time()), 'hey hey taxi, ni kai wang he chu?')
+    key = 'story_{}.txt'.format(time.time())
+    str_content = 'hey hey taxi, ni kai wang he chu?'
+    result = oss_agent.upload_string_file(key, str_content)
+    if result == 200:
+        url = 'https://{}.{}/{}'.format(oss_agent.bucket_name, oss_agent.endpoint, key)
     """
 
     def upload_string_file(self, key, str_content, progress_callback=None, public_read=True):
@@ -55,7 +59,10 @@ class OssAgent(object):
 
     oss_agent = OssAgent()
     with open('funapp_0420_1448.apk', 'rb') as fs:
-        oss_agent.upload_bin_file('funapp_{}.app'.format(time.time()), fs)
+        key = 'funapp_{}.app'.format(time.time())
+        result = oss_agent.upload_bin_file(key, fs)
+        if result == 200:
+            url = 'https://{}.{}/{}'.format(oss_agent.bucket_name, oss_agent.endpoint, key)
         pass
     """
 
